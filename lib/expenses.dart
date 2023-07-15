@@ -12,6 +12,12 @@ class Expenses extends StatefulWidget {
 class _ExpensesState extends State<Expenses> {
   @override
   Widget build(context) {
-    return Text("Hello world");
+    return const Scaffold(
+      body: Column(
+        children: [
+          Text("Hello world"),
+        ],
+      ),
+    );
   }
 }
