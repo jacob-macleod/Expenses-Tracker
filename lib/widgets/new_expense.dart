@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expenses_tracker/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -12,6 +13,7 @@ class NewExpense extends StatefulWidget {
 class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime? _selectedDate;
 
   void _presentDatePicker() {
     final now = DateTime.now();
@@ -25,7 +27,11 @@ class _NewExpenseState extends State<NewExpense> {
       // So this code is run when showDatePicker returns a value some time in the future
       // We could use async and await instead, and for the above line a few lines above, change it to:
       // final selectedDate = await showDatePicker(
-    ).then((value) {});
+    ).then((value) {
+      setState(() {
+        _selectedDate = value;
+      });
+    });
   }
 
   // Delete controller when it is not needed
@@ -69,7 +75,9 @@ class _NewExpenseState extends State<NewExpense> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text("Selected Date"),
+                      Text(_selectedDate == null
+                          ? "No date chosen"
+                          : formatter.format(_selectedDate!)),
                       IconButton(
                         icon: const Icon(
                           Icons.calendar_month,
