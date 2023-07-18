@@ -13,6 +13,21 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
 
+  void _presentDatePicker() {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+    showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: firstDate,
+      lastDate: now,
+      // showDatePicker returns a future variable - a variable that will be available in the future when a date is selected
+      // So this code is run when showDatePicker returns a value some time in the future
+      // We could use async and await instead, and for the above line a few lines above, change it to:
+      // final selectedDate = await showDatePicker(
+    ).then((value) {});
+  }
+
   // Delete controller when it is not needed
   @override
   void dispose() {
@@ -34,12 +49,37 @@ class _NewExpenseState extends State<NewExpense> {
                 label: Text("Title"),
               ),
             ),
-            TextField(
-              controller: _amountController,
-              decoration: const InputDecoration(
-                label: Text("Amount"),
-              ),
-              keyboardType: TextInputType.number,
+            Row(
+              children: [
+                Expanded(
+                  // Expanded here because TextField is a child of Row and needs to take up all avaliable space but is constrained bny parent row
+                  child: TextField(
+                    controller: _amountController,
+                    decoration: const InputDecoration(
+                      label: Text("Amount"),
+                      prefixText: "\$ ",
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Expanded here because a row within a row would cause problems - child row wants to take up all avaliable space but is constrained by the parent row
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Selected Date"),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.calendar_month,
+                        ),
+                        onPressed: _presentDatePicker,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Row(
               children: [
@@ -51,8 +91,10 @@ class _NewExpenseState extends State<NewExpense> {
                   child: const Text("Save Expense"),
                 ),
                 const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {},
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: const Text("Cancel"),
                 ),
               ],
