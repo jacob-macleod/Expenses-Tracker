@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expenses_tracker/models/expense.dart';
+import 'package:flutter/rendering.dart';
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -33,6 +34,18 @@ class _NewExpenseState extends State<NewExpense> {
         _selectedDate = value;
       });
     });
+  }
+
+  void _submitExpenseData() {
+    // Validate the entered expense data
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      // Show error message
+    }
   }
 
   // Delete controller when it is not needed
@@ -116,10 +129,7 @@ class _NewExpenseState extends State<NewExpense> {
                 ),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () {
-                    print(_titleController.text);
-                    print(_amountController.text);
-                  },
+                  onPressed: _submitExpenseData,
                   child: const Text("Save Expense"),
                 ),
                 const SizedBox(width: 16),
