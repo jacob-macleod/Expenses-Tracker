@@ -3,7 +3,8 @@ import 'package:expenses_tracker/models/expense.dart';
 import 'package:flutter/rendering.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense(this.addNewExpense, {super.key});
+  final Function addNewExpense;
 
   @override
   State<NewExpense> createState() {
@@ -61,6 +62,15 @@ class _NewExpenseState extends State<NewExpense> {
       );
       return;
     }
+
+    widget.addNewExpense(
+      _titleController.text,
+      enteredAmount,
+      _selectedDate!,
+      _selectedCategory,
+    );
+
+    Navigator.pop(context);
   }
 
   // Delete controller when it is not needed

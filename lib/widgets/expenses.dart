@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:expenses_tracker/models/expense.dart';
 import 'package:expenses_tracker/widgets/expenses_list/expenses_list.dart';
@@ -28,12 +30,29 @@ class _ExpensesState extends State<Expenses> {
     ),
   ];
 
+  void _addNewExpense(
+      String title, double amount, DateTime date, Category category) {
+    final newExpense = Expense(
+      amount: amount,
+      title: title,
+      date: date,
+      category: category,
+    );
+
+    setState(() {
+      _registeredExpenses.add(newExpense);
+    });
+  }
+
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(_addNewExpense),
     );
   }
+
+  // Sort registered expenses in reverse order
+  get _sortedExpenses => _registeredExpenses.reversed.toList();
 
   @override
   Widget build(context) {
@@ -50,7 +69,7 @@ class _ExpensesState extends State<Expenses> {
       body: Column(
         children: [
           Expanded(
-            child: ExpensesList(expenses: _registeredExpenses),
+            child: ExpensesList(expenses: _sortedExpenses),
           ),
         ],
       ),
